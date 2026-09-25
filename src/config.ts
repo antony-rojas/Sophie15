@@ -10,7 +10,7 @@ import heroBallroom from './assets/images/hero_ballroom_doors_1787209718540.jpg'
 import minimalDress from './assets/images/minimal_dress_code_1787469268748.jpg';
 import princessGazing from './assets/images/princess_gazing_castle_1787209775904.jpg';
 import stainedGlass from './assets/images/stained_glass_dance_1787468154920.jpg';
-import musicaSophie from './assets/music/musicaSof.mp3'.
+import musicaSophie from './assets/music/musicaSof.mp3';
 
 export const INVITATION_CONFIG = {
   quinceaneraName: "Sophie Shanell",
