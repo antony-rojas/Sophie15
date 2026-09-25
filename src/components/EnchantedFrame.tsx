@@ -35,7 +35,7 @@ export const EnchantedFrame: React.FC<EnchantedFrameProps> = ({
         {/* Botanical Gold Frame Texture Ambient Layer */}
         <div
           className="absolute inset-0 opacity-20 mix-blend-screen bg-cover bg-center pointer-events-none"
-          style={{ backgroundImage: `url(${IMAGES.botanicalFrame})` }}
+          style={{ backgroundImage: `url(${IMAGES.stainedGlass})` }}
         />
 
         {/* Scattered Stardust & Golden Specks */}
