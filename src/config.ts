@@ -10,6 +10,7 @@ import heroBallroom from './assets/images/hero_ballroom_doors_1787209718540.jpg'
 import minimalDress from './assets/images/minimal_dress_code_1787469268748.jpg';
 import princessGazing from './assets/images/princess_gazing_castle_1787209775904.jpg';
 import stainedGlass from './assets/images/stained_glass_dance_1787468154920.jpg';
+import musicaSophie from './assets/music/musica.mp4'.
 
 export const INVITATION_CONFIG = {
   quinceaneraName: "Sophie Shanell",
@@ -40,7 +41,7 @@ export const INVITATION_CONFIG = {
     { name: "Amarillo", hex: "#F4D03F", gradient: "from-[#FEF08A] via-[#FACC15] to-[#CA8A04]" },
   ],
   // High quality classical fairy-tale orchestral waltz
-  musicUrl: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=waltz-of-the-flowers-tchaikovsky-piano-classical-112191.mp3",
+  musicUrl: musicaSophie,
   rsvpUrl: "#rsvp",
   whatsappNumber: "+51926961387",
   whatsappMessage: "✨ Estás invitado/a a los XV años de Sophie Shanell ✨\n\n14 de noviembre de 2026\n\nUna noche encantada nos espera. 🥀✨",
