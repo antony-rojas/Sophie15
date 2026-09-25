@@ -1,0 +1,230 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Fleur+De+Leah&display=swap');
+
+@font-face {
+  font-family: 'Melancholight';
+  src: url('/fonts/Melancholight-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Melancholight';
+  src: url('/fonts/Melancholight-Italic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+::selection {
+  background: rgba(222, 171, 91, 0.35);
+  color: #FFF8E7;
+}
+
+@layer base {
+  :root {
+    --gold-primary: #C29043;
+    --gold-dark: #A6752C;
+    --gold-light: #DEAB5B;
+    --gold-shimmer: #F3DC9B;
+    --champagne: #C29043;
+    --copper-gold: #C29043;
+    --copper-light: #DEAB5B;
+    --copper-dark: #825820;
+    --blue-night: #081426;
+    --blue-night-deep: #030914;
+    --blue-royal: #172B4D;
+    --ivory: #FDF3DF;
+    --rose-red: #7A1727;
+  }
+}
+
+.font-fleur,
+.font-fleur-de-leah,
+.font-melancholight,
+.font-script,
+.font-calligraphy {
+  font-family: 'Fleur De Leah', cursive, serif;
+  font-weight: normal;
+}
+
+.font-playfair {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+.font-prata {
+  font-family: 'Prata', 'Playfair Display', serif;
+}
+
+.font-cinzel {
+  font-family: 'Cinzel', serif;
+}
+
+.font-cinzel-dec {
+  font-family: 'Cinzel Decorative', 'Cinzel', serif;
+}
+
+.font-garamond {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+.font-script,
+.font-calligraphy {
+  font-family: 'Melancholight', cursive, serif;
+  font-weight: normal;
+}
+
+.font-montserrat {
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Atmospheric Luxury Text & Shadows */
+.text-luxury-champagne {
+  color: #C29043;
+  text-shadow: 0 4px 20px rgba(194, 144, 67, 0.35);
+}
+
+.text-copper-gradient {
+  background: linear-gradient(135deg, #F3DC9B 0%, #DEAB5B 30%, #C29043 70%, #9E6F28 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gold-gradient {
+  background: linear-gradient(135deg, #F3DC9B 0%, #DEAB5B 35%, #C29043 70%, #DEAB5B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gold-bright {
+  background: linear-gradient(135deg, #FFF8E7 0%, #DEAB5B 45%, #C29043 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Atmospheric Glow Effects */
+.luxury-ambient-radial {
+  background-image: radial-gradient(circle at 50% 50%, rgba(194, 144, 67, 0.18) 0%, transparent 70%);
+}
+
+.luxury-radial-glow {
+  background-image: radial-gradient(circle at 50% 50%, rgba(194, 144, 67, 0.25) 0%, rgba(23, 43, 77, 0.4) 50%, transparent 80%);
+}
+
+.gold-glow {
+  text-shadow: 0 0 20px rgba(194, 144, 67, 0.45), 0 0 40px rgba(194, 144, 67, 0.25);
+}
+
+.gold-glow-box {
+  box-shadow: 0 0 35px rgba(194, 144, 67, 0.25), inset 0 0 15px rgba(194, 144, 67, 0.1);
+}
+
+.gold-border {
+  border-color: rgba(194, 144, 67, 0.35);
+}
+
+.gold-border-rich {
+  border-color: rgba(194, 144, 67, 0.7);
+}
+
+.luxury-card-border {
+  border: 1px solid rgba(194, 144, 67, 0.4);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(194, 144, 67, 0.15);
+}
+
+/* Candle flame flicker animation */
+@keyframes candleFlicker {
+  0%, 100% {
+    transform: scale(1) rotate(-1deg);
+    opacity: 0.95;
+    filter: drop-shadow(0 0 8px rgba(222, 171, 91, 0.8));
+  }
+  25% {
+    transform: scale(1.08, 0.96) rotate(1deg);
+    opacity: 0.85;
+    filter: drop-shadow(0 0 12px rgba(243, 220, 155, 0.9));
+  }
+  50% {
+    transform: scale(0.95, 1.04) rotate(-0.5deg);
+    opacity: 1;
+    filter: drop-shadow(0 0 6px rgba(194, 144, 67, 0.7));
+  }
+  75% {
+    transform: scale(1.04, 0.98) rotate(1.5deg);
+    opacity: 0.9;
+    filter: drop-shadow(0 0 10px rgba(222, 171, 91, 0.85));
+  }
+}
+
+.animate-candle {
+  animation: candleFlicker 2.8s infinite ease-in-out;
+  transform-origin: bottom center;
+}
+
+/* Subtle float animation */
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+}
+
+.animate-float {
+  animation: floatGentle 6s infinite ease-in-out;
+}
+
+/* Ambient celestial star sparkle pulse */
+@keyframes starPulse {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.15);
+  }
+}
+
+.animate-star {
+  animation: starPulse 4s infinite ease-in-out;
+}
+
+/* Shimmer reflection sweep on button/card */
+@keyframes shimmerSweep {
+  0% {
+    transform: translateX(-150%) skewX(-20deg);
+  }
+  100% {
+    transform: translateX(250%) skewX(-20deg);
+  }
+}
+
+.shimmer-hover:hover::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(243, 220, 155, 0.4), transparent);
+  animation: shimmerSweep 1.2s ease-in-out;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #081426;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a3c5a;
+  border-radius: 4px;
+  border: 1px solid rgba(194, 144, 67, 0.3);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C29043;
+}

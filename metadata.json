@@ -1,0 +1,6 @@
+{
+  "name": "Sophie Shanell — Mis XV Años",
+  "description": "Invitación digital cinematográfica y de lujo para los XV años de Sophie Shanell. Una noche encantada inspirada en un cuento de hadas europeo.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
