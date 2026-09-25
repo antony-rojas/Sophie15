@@ -18,7 +18,7 @@ export const DressCode: React.FC = () => {
               <div className="relative w-full max-w-xs sm:max-w-sm aspect-[3/4] rounded-2xl p-2 bg-gradient-to-b from-[#DEAB5B] via-[#C29043] to-[#9E6F28] shadow-[0_15px_40px_rgba(0,0,0,0.7),0_0_25px_rgba(194,144,67,0.3)] group">
                 <div className="w-full h-full rounded-xl overflow-hidden bg-[#030914]">
                   <img
-                    src={IMAGES.coutureGown}
+                    src={IMAGES.minimalDress}
                     alt="Vestimenta de Gala Elegante"
                     referrerPolicy="no-referrer"
                     className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
