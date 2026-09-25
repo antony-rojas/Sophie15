@@ -2,6 +2,16 @@
  * Configuration variables for Sophie Shanell - Mis XV Años
  * Modify here to update event details without touching component code.
  */
+import botanicalFrame from './assets/images/botanical_gold_frame_1787467015216.jpg'; 
+import coutureGalaGown from './assets/images/couture_gala_gown_1787209764865. jpg'; 
+import enchantedRose from './assets/images/enchanted_rose_1787209730778.jpg'; 
+import fairytaleCastle from './assets/images/fairytale_castle_night_1787209753203.jpg'; 
+import grandBallroom from './assets/images/grand_ballroom_panorama_1787209741456.jpg'; 
+import heroBallroom from './assets/images/hero_ballroom_doors_1787209718540.jpg';
+import minimalDress from './assets/images/minimal_dress_code_1787469268748.jpg';
+import princessGazing from './assets/images/princess_gazing_castle_1787209775904.jpg';
+import stainedGlass from './assets/images/stained_glass_dance_1787468154920.jpg';
+
 export const INVITATION_CONFIG = {
   quinceaneraName: "Sophie Shanell",
   eventName: "Mis XV Años",
@@ -51,11 +61,5 @@ export const INVITATION_CONFIG = {
 };
 
 export const IMAGES = {
-  heroBallroom: "/src/assets/images/hero_ballroom_doors_1787209718540.jpg",
-  enchantedRose: "/src/assets/images/stained_glass_dance_1787468154920.jpg",
-  grandBallroom: "/src/assets/images/grand_ballroom_panorama_1787209741456.jpg",
-  fairytaleCastle: "/src/assets/images/fairytale_castle_night_1787209753203.jpg",
-  coutureGown: "/src/assets/images/minimal_dress_code_1787469268748.jpg",
-  princessGazing: "/src/assets/images/princess_gazing_castle_1787209775904.jpg",
-  botanicalFrame: "/src/assets/images/botanical_gold_frame_1787467015216.jpg",
+ heroBallroom, enchantedRose, grandBallroom, fairytaleCastle, coutureGown, princessGazing, botanicalFrame, minimalDress, stainedGlass
 };
