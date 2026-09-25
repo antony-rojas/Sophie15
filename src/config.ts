@@ -7,7 +7,7 @@ import enchantedRose from './assets/images/enchanted_rose_1787209730778.jpg';
 import fairytaleCastle from './assets/images/fairytale_castle_night_1787209753203.jpg'; 
 import grandBallroom from './assets/images/grand_ballroom_panorama_1787209741456.jpg'; 
 import heroBallroom from './assets/images/hero_ballroom_doors_1787209718540.jpg';
-import coutureGown from './assets/images/minimal_dress_code_1787469268748.jpg';
+import minimalDress from './assets/images/minimal_dress_code_1787469268748.jpg';
 import princessGazing from './assets/images/princess_gazing_castle_1787209775904.jpg';
 import stainedGlass from './assets/images/stained_glass_dance_1787468154920.jpg';
 
@@ -60,5 +60,5 @@ export const INVITATION_CONFIG = {
 };
 
 export const IMAGES = {
- heroBallroom, enchantedRose, grandBallroom, fairytaleCastle, coutureGown, princessGazing, botanicalFrame, minimalDress, stainedGlass
+ heroBallroom, enchantedRose, grandBallroom, fairytaleCastle, princessGazing, botanicalFrame, minimalDress, stainedGlass
 };
