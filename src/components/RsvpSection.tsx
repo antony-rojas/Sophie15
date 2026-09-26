@@ -16,6 +16,7 @@ export const RsvpSection: React.FC = () => {
   });
 
   const [submitted, setSubmitted] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>('');
 
   const triggerRoyalCelebration = () => {
@@ -45,7 +46,7 @@ export const RsvpSection: React.FC = () => {
     })();
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.fullName.trim()) {
       setErrorMsg('Por favor ingresa tu nombre completo.');
@@ -57,19 +58,20 @@ export const RsvpSection: React.FC = () => {
     }
 
     setErrorMsg('');
+    setIsSaving(true);
 
-    // Save to private persistent list
-    saveRsvpRecord({
-      fullName: formData.fullName,
-      phone: formData.phone,
-      attending: formData.attending,
-      guestsCount: formData.guestsCount,
-    });
-
-    // Trigger visual celebratory animation
-    triggerRoyalCelebration();
-
-    setSubmitted(true);
+    try {
+      await saveRsvpRecord({
+        fullName: formData.fullName,
+        phone: formData.phone,
+      });
+      triggerRoyalCelebration();
+      setSubmitted(true);
+    } catch (error) {
+      setErrorMsg(error instanceof Error ? error.message : 'No se pudo guardar la confirmación. Inténtalo de nuevo.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const sendToWhatsApp = () => {
@@ -155,9 +157,10 @@ export const RsvpSection: React.FC = () => {
                 <button
                   type="submit"
                   id="confirm-attendance-btn"
-                  className="w-full py-4 rounded-full text-xs sm:text-sm font-montserrat font-bold tracking-[0.3em] uppercase text-[#030914] bg-gradient-to-r from-[#DEAB5B] via-[#C29043] to-[#9E6F28] hover:from-[#F3DC9B] hover:via-[#DEAB5B] hover:to-[#C29043] transition-all duration-300 shadow-[0_0_25px_rgba(194,144,67,0.6)] hover:shadow-[0_0_35px_rgba(243,220,155,0.8)] hover:scale-[1.02] active:scale-98 shimmer-hover cursor-pointer"
+                  disabled={isSaving}
+                  className="w-full py-4 rounded-full text-xs sm:text-sm font-montserrat font-bold tracking-[0.3em] uppercase text-[#030914] bg-gradient-to-r from-[#DEAB5B] via-[#C29043] to-[#9E6F28] hover:from-[#F3DC9B] hover:via-[#DEAB5B] hover:to-[#C29043] transition-all duration-300 shadow-[0_0_25px_rgba(194,144,67,0.6)] hover:shadow-[0_0_35px_rgba(243,220,155,0.8)] hover:scale-[1.02] active:scale-98 shimmer-hover cursor-pointer disabled:opacity-60 disabled:cursor-wait disabled:hover:scale-100"
                 >
-                  CONFIRMAR ASISTENCIA
+                  {isSaving ? 'GUARDANDO...' : 'CONFIRMAR ASISTENCIA'}
                 </button>
               </div>
             </form>

@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import { RsvpRecord } from '../types';
 import { 
-  getStoredRsvps, 
+  fetchRsvps, 
   deleteRsvpRecord, 
   exportRsvpsToExcelXML, 
   exportRsvpsToJSON,
@@ -37,8 +37,11 @@ export const PrivateRsvpListModal: React.FC<PrivateRsvpListModalProps> = ({
   onClose,
 }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isCheckingPin, setIsCheckingPin] = useState<boolean>(false);
+  const [adminPin, setAdminPin] = useState<string>('');
   const [pinInput, setPinInput] = useState<string>('');
   const [pinError, setPinError] = useState<string>('');
+  const [listError, setListError] = useState<string>('');
   const [records, setRecords] = useState<RsvpRecord[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'yes' | 'no'>('all');
@@ -48,42 +51,63 @@ export const PrivateRsvpListModal: React.FC<PrivateRsvpListModalProps> = ({
   const [confirmClearAll, setConfirmClearAll] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<'rsvp' | 'music'>('rsvp');
 
-  // Load records
-  const refreshRecords = () => {
-    setRecords(getStoredRsvps());
+  const refreshRecords = async (pin = adminPin) => {
+    if (!pin) return;
+    const next = await fetchRsvps(pin);
+    setRecords(next);
     setConfirmDeleteId(null);
+    setListError('');
   };
 
   useEffect(() => {
-    if (isOpen) {
-      refreshRecords();
-    }
-  }, [isOpen]);
+    if (!isOpen || !isAuthenticated || !adminPin) return;
+    refreshRecords(adminPin).catch((error: unknown) => {
+      setListError(error instanceof Error ? error.message : 'No se pudo cargar la lista.');
+    });
+  }, [isOpen, isAuthenticated, adminPin]);
 
-  // Handle PIN Unlock (passcode: 0221)
-  const handlePinSubmit = (e: React.FormEvent) => {
+  const handlePinSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const clean = pinInput.trim();
-    if (clean === '0221') {
+    if (!clean) {
+      setPinError('Ingresa el PIN de organizador.');
+      return;
+    }
+
+    setIsCheckingPin(true);
+    setPinError('');
+    try {
+      const next = await fetchRsvps(clean);
+      setRecords(next);
+      setAdminPin(clean);
       setIsAuthenticated(true);
-      setPinError('');
-    } else {
-      setPinError('Contraseña incorrecta. Por favor ingresa la clave de 4 dígitos.');
+    } catch (error) {
+      setPinError(error instanceof Error ? error.message : 'No se pudo abrir la lista.');
+    } finally {
+      setIsCheckingPin(false);
     }
   };
 
-  // Safe deletion without blocked window.confirm
-  const executeDelete = (id: string) => {
-    const updated = deleteRsvpRecord(id);
-    setRecords(updated);
-    setConfirmDeleteId(null);
+  const executeDelete = async (id: string) => {
+    try {
+      const updated = await deleteRsvpRecord(id, adminPin);
+      setRecords(updated);
+      setConfirmDeleteId(null);
+      setListError('');
+    } catch (error) {
+      setListError(error instanceof Error ? error.message : 'No se pudo eliminar el registro.');
+    }
   };
 
-  // Safe clear all
-  const executeClearAll = () => {
-    clearAllRsvps();
-    setRecords([]);
-    setConfirmClearAll(false);
+  const executeClearAll = async () => {
+    try {
+      await clearAllRsvps(adminPin);
+      setRecords([]);
+      setConfirmClearAll(false);
+      setListError('');
+    } catch (error) {
+      setListError(error instanceof Error ? error.message : 'No se pudo vaciar la lista.');
+    }
   };
 
   const handleCopyPhone = (phone: string) => {
@@ -184,9 +208,10 @@ export const PrivateRsvpListModal: React.FC<PrivateRsvpListModalProps> = ({
 
               <button
                 type="submit"
-                className="w-full py-3.5 rounded-xl font-montserrat font-bold text-xs tracking-[0.25em] uppercase bg-gradient-to-r from-[#DEAB5B] via-[#C29043] to-[#9E6F28] text-[#030914] hover:scale-[1.02] transition-all cursor-pointer shadow-lg"
+                disabled={isCheckingPin}
+                className="w-full py-3.5 rounded-xl font-montserrat font-bold text-xs tracking-[0.25em] uppercase bg-gradient-to-r from-[#DEAB5B] via-[#C29043] to-[#9E6F28] text-[#030914] hover:scale-[1.02] transition-all cursor-pointer shadow-lg disabled:opacity-60 disabled:cursor-wait"
               >
-                DESBLOQUEAR LISTA
+                {isCheckingPin ? 'ABRIENDO...' : 'DESBLOQUEAR LISTA'}
               </button>
             </form>
           </div>
@@ -280,7 +305,11 @@ export const PrivateRsvpListModal: React.FC<PrivateRsvpListModalProps> = ({
                   />
                 </div>
                 <button
-                  onClick={refreshRecords}
+                  onClick={() => {
+                    refreshRecords().catch((error: unknown) => {
+                      setListError(error instanceof Error ? error.message : 'No se pudo cargar la lista.');
+                    });
+                  }}
                   title="Actualizar lista"
                   className="p-2 rounded-xl bg-[#0B1A30] border border-[#C29043]/50 text-[#DEAB5B] hover:text-white transition-all cursor-pointer shrink-0"
                 >
@@ -321,7 +350,7 @@ export const PrivateRsvpListModal: React.FC<PrivateRsvpListModalProps> = ({
                 {/* Export Buttons */}
                 <div className="flex items-center gap-1.5 ml-auto">
                   <button
-                    onClick={exportRsvpsToExcelXML}
+                    onClick={() => exportRsvpsToExcelXML(records)}
                     title="Descargar tabla en formato Excel XML (.xml)"
                     className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-xl bg-emerald-950/90 border border-emerald-500/60 text-emerald-300 hover:bg-emerald-800 hover:text-white text-[11px] sm:text-xs font-montserrat font-medium transition-all cursor-pointer shadow whitespace-nowrap"
                   >
@@ -330,7 +359,7 @@ export const PrivateRsvpListModal: React.FC<PrivateRsvpListModalProps> = ({
                   </button>
 
                   <button
-                    onClick={exportRsvpsToJSON}
+                    onClick={() => exportRsvpsToJSON(records)}
                     title="Descargar archivo de respaldo JSON"
                     className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#0B1A30] border border-[#C29043]/50 text-[#DEAB5B] hover:bg-[#C29043]/20 text-[11px] sm:text-xs font-montserrat font-medium transition-all cursor-pointer shadow"
                   >
@@ -348,6 +377,12 @@ export const PrivateRsvpListModal: React.FC<PrivateRsvpListModalProps> = ({
                 </div>
               </div>
             </div>
+
+            {listError && (
+              <p className="text-xs font-montserrat text-rose-300 bg-rose-950/40 border border-rose-800/50 rounded-lg px-3 py-2 shrink-0">
+                {listError}
+              </p>
+            )}
 
             {/* Records Container (min-h-0 with overflow-y-auto so scrolling works reliably on mobile and desktop) */}
             <div className="flex-1 min-h-0 overflow-y-auto rounded-2xl border border-[#C29043]/30 bg-[#030914]/60">
@@ -607,7 +642,7 @@ export const PrivateRsvpListModal: React.FC<PrivateRsvpListModalProps> = ({
                 <span>
                   {activeTab === 'music'
                     ? 'Configuración de Audio y Bucle Persistente · Mis XV Años'
-                    : `${records.length} registro${records.length === 1 ? '' : 's'} en base de datos`}
+                    : `${records.length} registro${records.length === 1 ? '' : 's'} en la hoja de Google`}
                 </span>
               </div>
 

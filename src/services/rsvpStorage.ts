@@ -1,67 +1,72 @@
+import { INVITATION_CONFIG } from '../config';
 import { RsvpRecord } from '../types';
 
-const STORAGE_KEY = 'sophie_xv_rsvp_records_v1';
+interface SheetResponse {
+  ok?: boolean;
+  error?: string;
+  record?: RsvpRecord;
+  records?: RsvpRecord[];
+}
 
-export const getStoredRsvps = (): RsvpRecord[] => {
-  try {
-    const data = localStorage.getItem(STORAGE_KEY);
-    if (!data) return [];
-    const parsed = JSON.parse(data);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch (error) {
-    console.error('Error loading RSVPs from localStorage:', error);
-    return [];
+async function postSheet(body: Record<string, unknown>): Promise<SheetResponse> {
+  const url = INVITATION_CONFIG.rsvpScriptUrl.trim();
+  if (!url) {
+    throw new Error('La lista todavía no está conectada a la hoja de Google.');
   }
-};
 
-export const saveRsvpRecord = (entry: Omit<RsvpRecord, 'id' | 'timestamp' | 'formattedDate'>): RsvpRecord => {
-  const current = getStoredRsvps();
-  const now = new Date();
-  
-  const record: RsvpRecord = {
-    id: `rsvp_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+  const response = await fetch(url, {
+    method: 'POST',
+    redirect: 'follow',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(body),
+  });
+
+  const text = await response.text();
+  let data: SheetResponse;
+  try {
+    data = JSON.parse(text) as SheetResponse;
+  } catch {
+    throw new Error('La hoja de Google no respondió. Revisa que el script esté publicado como aplicación web, con acceso para cualquier persona.');
+  }
+
+  if (!data.ok) {
+    throw new Error(data.error || 'No se pudo completar la operación.');
+  }
+
+  return data;
+}
+
+export const saveRsvpRecord = async (
+  entry: Pick<RsvpRecord, 'fullName' | 'phone'>
+): Promise<RsvpRecord> => {
+  const data = await postSheet({
+    action: 'add',
     fullName: entry.fullName.trim(),
     phone: entry.phone.trim(),
-    attending: entry.attending,
-    guestsCount: entry.attending === 'yes' ? (entry.guestsCount || 1) : 0,
-    timestamp: now.toISOString(),
-    formattedDate: now.toLocaleString('es-PE', {
-      dateStyle: 'medium',
-      timeStyle: 'short',
-    }),
-  };
+  });
 
-  const updated = [record, ...current];
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-  } catch (error) {
-    console.error('Error saving RSVP to localStorage:', error);
+  if (!data.record) {
+    throw new Error('La hoja no devolvió la confirmación.');
   }
 
-  return record;
+  return data.record;
 };
 
-export const deleteRsvpRecord = (id: string): RsvpRecord[] => {
-  const current = getStoredRsvps();
-  const updated = current.filter((r) => r.id !== id);
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-  } catch (error) {
-    console.error('Error deleting RSVP:', error);
-  }
-  return updated;
+export const fetchRsvps = async (pin: string): Promise<RsvpRecord[]> => {
+  const data = await postSheet({ action: 'list', pin });
+  return Array.isArray(data.records) ? data.records : [];
 };
 
-export const clearAllRsvps = (): void => {
-  try {
-    localStorage.removeItem(STORAGE_KEY);
-  } catch (error) {
-    console.error('Error clearing RSVPs:', error);
-  }
+export const deleteRsvpRecord = async (id: string, pin: string): Promise<RsvpRecord[]> => {
+  const data = await postSheet({ action: 'delete', id, pin });
+  return Array.isArray(data.records) ? data.records : [];
 };
 
-export const exportRsvpsToExcelXML = (): void => {
-  const records = getStoredRsvps();
+export const clearAllRsvps = async (pin: string): Promise<void> => {
+  await postSheet({ action: 'clear', pin });
+};
+
+export const exportRsvpsToExcelXML = (records: RsvpRecord[]): void => {
   if (records.length === 0) {
     return;
   }
@@ -183,13 +188,11 @@ export const exportRsvpsToExcelXML = (): void => {
   URL.revokeObjectURL(url);
 };
 
-export const exportRsvpsToCSV = (): void => {
-  // Alias or fallback that also exports
-  exportRsvpsToExcelXML();
+export const exportRsvpsToCSV = (records: RsvpRecord[]): void => {
+  exportRsvpsToExcelXML(records);
 };
 
-export const exportRsvpsToJSON = (): void => {
-  const records = getStoredRsvps();
+export const exportRsvpsToJSON = (records: RsvpRecord[]): void => {
   if (records.length === 0) {
     alert('No hay registros de confirmación para exportar aún.');
     return;

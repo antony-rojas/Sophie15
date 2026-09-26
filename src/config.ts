@@ -45,6 +45,8 @@ export const INVITATION_CONFIG = {
   rsvpUrl: "#rsvp",
   whatsappNumber: "+51926961387",
   whatsappMessage: "✨ Estás invitado/a a los XV años de Sophie Shanell ✨\n\n14 de noviembre de 2026\n\nUna noche encantada nos espera. 🥀✨",
+  // URL /exec de la aplicación web. Pasos en google-apps-script/Code.gs
+  rsvpScriptUrl: "https://script.google.com/macros/s/AKfycbwxAE5iyS6K_9hfZSeB9KdmE4K8j9pbK2xFjIMMRZXQcdSN8-JTnc3jzsliVH5_dFDe/exec",
   parents: {
     sectionTitle: "Los padres de la quinceañera",
     father: "Luis Cabrera",
