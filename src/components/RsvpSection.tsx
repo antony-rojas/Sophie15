@@ -77,7 +77,7 @@ export const RsvpSection: React.FC = () => {
   const sendToWhatsApp = () => {
     const guestName = formData.fullName.trim();
     const message = `Hola soy ${guestName} y quiero confirmar mi asistencia a tu quinceañero`;
-    const targetPhone = "51926961387";
+    const targetPhone = "51994857975";
     const url = `https://wa.me/${targetPhone}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
   };
